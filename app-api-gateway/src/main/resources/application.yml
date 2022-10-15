@@ -1,0 +1,28 @@
+server:
+  port: ${PORT_GATEWAY:9230}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+    min-response-size: 1024
+  servlet:
+    encoding:
+      force: true
+
+spring:
+  application:
+    name: api-gateway
+
+  main:
+    allow-bean-definition-overriding: true
+    log-startup-info: false
+
+  jackson:
+    default-property-inclusion: NON_NULL
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+
+  flyway:
+    enabled: true
+    table: schema-api-gateway
+    out-of-order: true
+    connect-retries: 3
+    connect-retries-interval: 10
