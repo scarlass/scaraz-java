@@ -49,6 +49,7 @@ spring:
 scaraz:
   app:
     log-level: debug
+    log-directory: ".logs"
     async:
       core-pool-size: 2
       max-pool-size: 50

@@ -12,7 +12,7 @@ public class AppProperties {
 
     private LogLevel logLevel = LogLevel.INFO;
 
-    private String logDirectory;
+    private String logDirectory = ".log";
 
     private Asynchronous async = new Asynchronous();
 
