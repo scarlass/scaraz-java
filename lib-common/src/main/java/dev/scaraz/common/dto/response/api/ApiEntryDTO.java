@@ -22,6 +22,8 @@ public class ApiEntryDTO implements Serializable {
 
     private List<String> tags;
 
+    private List<ApiHostDTO> hosts;
+
     private List<ApiRouteDTO> routes;
 
 }

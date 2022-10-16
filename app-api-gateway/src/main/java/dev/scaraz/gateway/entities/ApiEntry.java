@@ -4,6 +4,8 @@ package dev.scaraz.gateway.entities;
 import dev.scaraz.common.domain.audit.AuditingEntity;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_api_entry")
@@ -39,7 +42,13 @@ public class ApiEntry extends AuditingEntity {
     private String tags;
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "entry")
+    private Set<ApiHost> hosts = new HashSet<>();
+
+    @Builder.Default
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "entry")
     private Set<ApiRoute> routes = new HashSet<>();
 
     public String[] getTags() {
@@ -57,4 +66,37 @@ public class ApiEntry extends AuditingEntity {
         else tags += "," + tag;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof ApiEntry)) return false;
+
+        ApiEntry apiEntry = (ApiEntry) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(getId(), apiEntry.getId())
+                .append(getName(), apiEntry.getName())
+                .append(getPrefix(), apiEntry.getPrefix())
+                .append(getDescription(), apiEntry.getDescription())
+                .append(getTags(), apiEntry.getTags())
+                .append(getHosts(), apiEntry.getHosts())
+                .append(getRoutes(), apiEntry.getRoutes())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(getId())
+                .append(getName())
+                .append(getPrefix())
+                .append(getDescription())
+                .append(getTags())
+                .append(getHosts())
+                .append(getRoutes())
+                .toHashCode();
+    }
 }

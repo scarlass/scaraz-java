@@ -2,6 +2,8 @@ package dev.scaraz.common.domain.audit;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -36,4 +38,27 @@ public abstract class AuditingEntity implements Serializable {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof AuditingEntity)) return false;
+
+        AuditingEntity that = (AuditingEntity) o;
+
+        return new EqualsBuilder()
+                .append(createdBy, that.createdBy)
+                .append(createdAt, that.createdAt)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(createdBy)
+                .append(createdAt)
+                .append(updatedBy)
+                .append(updatedAt)
+                .toHashCode();
+    }
 }

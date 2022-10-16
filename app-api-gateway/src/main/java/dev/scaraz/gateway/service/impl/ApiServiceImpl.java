@@ -1,13 +1,13 @@
 package dev.scaraz.gateway.service.impl;
 
-import dev.scaraz.common.dto.request.CreateApiEntryReqDTO;
-import dev.scaraz.common.dto.request.CreateApiRouteReqDTO;
-import dev.scaraz.common.dto.request.UpdateApiEntryDTO;
-import dev.scaraz.common.dto.request.UpdateApiRouteDTO;
+import dev.scaraz.common.configuration.MessageTranslator;
+import dev.scaraz.common.dto.request.*;
 import dev.scaraz.gateway.entities.ApiEntry;
+import dev.scaraz.gateway.entities.ApiHost;
 import dev.scaraz.gateway.entities.ApiRoute;
 import dev.scaraz.gateway.repositories.ApiEntryRepo;
 import dev.scaraz.gateway.repositories.ApiRouteRepo;
+import dev.scaraz.gateway.repositories.api.ApiHostRepo;
 import dev.scaraz.gateway.service.ApiQueryService;
 import dev.scaraz.gateway.service.ApiService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +36,13 @@ public class ApiServiceImpl implements ApiService {
     private static final String PATH_VARIABLE_PATTERN = "/(\\$\\{([\\w\\d_-]+)\\})(/)?";
 
     private final ApiEntryRepo entryRepo;
+    private final ApiHostRepo hostRepo;
     private final ApiRouteRepo routeRepo;
 
     private final ApiQueryService queryService;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final MessageTranslator translator;
 
     @Override
     public void refresh() {
@@ -48,6 +52,35 @@ public class ApiServiceImpl implements ApiService {
     @Override
     @Transactional
     public ApiEntry create(CreateApiEntryReqDTO dto) {
+        if (!dto.getPrefix().startsWith("/"))
+            dto.setPrefix("/" + dto.getPrefix());
+
+        boolean startWithApi = Pattern.compile("^/api", Pattern.CASE_INSENSITIVE)
+                .matcher(dto.getPrefix())
+                .matches();
+
+        if (startWithApi) {
+            throw HttpClientErrorException.create(
+                    "Reserved prefix",
+                    HttpStatus.BAD_REQUEST,
+                    translator.badRequestTitle(),
+                    null,
+                    null,
+                    null
+            );
+        }
+        else if (entryRepo.existsByPrefixContainsIgnoreCase(dto.getPrefix())) {
+            throw HttpClientErrorException.create(
+                    "Duplicate prefix",
+                    HttpStatus.BAD_REQUEST,
+                    translator.badRequestTitle(),
+                    null,
+                    null,
+                    null
+            );
+        }
+
+
         ApiEntry entry = ApiEntry.builder()
                 .name(dto.getName())
                 .prefix(dto.getPrefix())
@@ -80,9 +113,57 @@ public class ApiServiceImpl implements ApiService {
         Optional.ofNullable(dto.getTags())
                 .ifPresent(entry::setTags);
 
-        refresh();
         return entryRepo.save(entry);
     }
+
+
+    @Override
+    @Transactional
+    public ApiEntry addHosts(ApiEntry entry, Iterable<CreateApiHostDTO> dtos) {
+        List<ApiHost> hosts = new ArrayList<>();
+
+        for (CreateApiHostDTO dto : dtos) {
+            ApiHost host = ApiHost.builder()
+                    .entry(entry)
+                    .host(dto.getHost())
+                    .profile(dto.getProfile())
+                    .description(dto.getDescription())
+                    .build();
+
+            hosts.add(host);
+        }
+
+        if (hosts.size() > 0) {
+            entry.getHosts()
+                    .addAll(hostRepo.saveAll(hosts));
+        }
+
+        return entry;
+    }
+
+    @Override
+    public ApiEntry addHosts(long entryId, Iterable<CreateApiHostDTO> dtos) {
+        ApiEntry entry = queryService.findEntryById(entryId);
+        return addHosts(entry, dtos);
+    }
+
+    @Override
+    public ApiHost updateHost(long hostId, UpdateApiHostDTO dto) {
+        ApiHost host = queryService.findHostById(hostId);
+
+        Optional.ofNullable(dto.getHost())
+                .ifPresent(host::setHost);
+
+        Optional.ofNullable(dto.getProfile())
+                .ifPresent(host::setProfile);
+
+        Optional.ofNullable(dto.getDescription())
+                .ifPresent(host::setDescription);
+
+        host = hostRepo.save(host);
+        return host;
+    }
+
 
     @Override
     @Transactional
@@ -143,7 +224,6 @@ public class ApiServiceImpl implements ApiService {
         }
 
         route = routeRepo.save(route);
-        refresh();
         return route;
     }
 

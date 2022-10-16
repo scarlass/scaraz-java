@@ -26,6 +26,10 @@ public class CreateApiEntryReqDTO {
     private List<String> tags;
 
     @Builder.Default
+    private List<CreateApiHostDTO> hosts = new ArrayList<>();
+
+    @Builder.Default
     private List<CreateApiRouteReqDTO> routes = new ArrayList<>();
+
 
 }

@@ -10,6 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "scaraz.gateway")
 public class GatewayProperties {
 
-    private HostProfile hostProfile;
+    private HostProfile hostProfile = HostProfile.PRODUCTION;
 
 }

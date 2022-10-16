@@ -27,7 +27,9 @@ public class ApiGatewayApplication implements CommandLineRunner {
         SpringApplication app = new SpringApplication(ApiGatewayApplication.class);
         ScarazInitializer.setDefaultProfile(app);
 
-        app.run(args);
+        Environment env = app.run(args).getEnvironment();
+        String port = env.getProperty("server.port");
+        log.info("Application Running on port {}", port);
     }
 
     @PostConstruct

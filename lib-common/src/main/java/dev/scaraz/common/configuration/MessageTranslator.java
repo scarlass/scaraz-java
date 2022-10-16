@@ -39,7 +39,20 @@ public class MessageTranslator {
     }
 
     public String toLocal(String code, Object... args) {
-        return message(code, lang_id, args.length == 0 ? null : args);
+        return message(code, lang_id, args.length == 0 ?
+                                      null :
+                                      args);
     }
 
+    public String badRequestTitle() {
+        return translator.message("title.bad.request");
+    }
+
+    public String notFoundTitle() {
+        return translator.message("title.not.found");
+    }
+
+    public String unauthorizedTitle() {
+        return translator.message("title.unauthorized");
+    }
 }

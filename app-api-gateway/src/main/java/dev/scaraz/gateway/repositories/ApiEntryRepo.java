@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApiEntryRepo extends JpaRepository<ApiEntry, Long> {
+
+    boolean existsByPrefixContainsIgnoreCase(String prefix);
+
 }
