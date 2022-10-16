@@ -15,16 +15,20 @@ public class ScarazInitializer {
 
     private static final ScarazInitializer ins = new ScarazInitializer();
 
+    private String message(String profile1, String profile2) {
+        return String.format(
+                "You have miss configured your application! It should not run with both '%s' and '%s' profiles at the same time.",
+                profile1, profile2);
+    }
+
     private void ifHasBothProdAndDev(List<String> profiles) {
         if (profiles.contains(AppConstants.SPRING_PROFILE_DEVELOPMENT) && profiles.contains(AppConstants.SPRING_PROFILE_PRODUCTION))
-            throw new IllegalStateException("You have miss configured your application! It should not run " +
-                    "with both the 'dev' and 'prod' profiles at the same time.");
+            throw new IllegalStateException(message(AppConstants.SPRING_PROFILE_DEVELOPMENT, AppConstants.SPRING_PROFILE_PRODUCTION));
     }
 
     private void ifHasBothCloudAndDev(List<String> profiles) {
         if (profiles.contains(AppConstants.SPRING_PROFILE_DEVELOPMENT) && profiles.contains(AppConstants.SPRING_PROFILE_CLOUD))
-            throw new IllegalStateException("You have miss configured your application! It should not " +
-                    "run with both the 'dev' and 'cloud' profiles at the same time.");
+            throw new IllegalStateException(message(AppConstants.SPRING_PROFILE_DEVELOPMENT, AppConstants.SPRING_PROFILE_CLOUD));
     }
 
     public static void checkActiveProfile(Environment env) {

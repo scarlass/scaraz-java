@@ -45,3 +45,12 @@ logging:
     root: info
     sql: info
     web: off
+
+scaraz:
+  app:
+    async:
+      core-pool-size: 2
+      max-pool-size: 50
+      queue-capacity: 10_000
+  gateway:
+    host-profile: ${GATEWAY_HOST_PROFILE:production}

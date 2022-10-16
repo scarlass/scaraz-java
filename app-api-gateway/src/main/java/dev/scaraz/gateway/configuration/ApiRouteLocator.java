@@ -1,8 +1,9 @@
-package dev.scaraz.gateway.service;
+package dev.scaraz.gateway.configuration;
 
-import dev.scaraz.gateway.entity.ApiEntry;
-import dev.scaraz.gateway.entity.ApiRoute;
+import dev.scaraz.gateway.entities.ApiEntry;
+import dev.scaraz.gateway.entities.ApiRoute;
 import dev.scaraz.gateway.repositories.ApiEntryRepo;
+import dev.scaraz.gateway.service.ApiQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -16,14 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiRouteLocator implements RouteLocator {
 
-    private final ApiEntryRepo apiEntryRepo;
+    private final ApiQueryService apiQueryService;
 
     private final RouteLocatorBuilder routeLocatorBuilder;
 
     @Override
     public Flux<Route> getRoutes() {
         RouteLocatorBuilder.Builder routesBuilder = routeLocatorBuilder.routes();
-        List<ApiEntry> entries = apiEntryRepo.findAll();
+        List<ApiEntry> entries = apiQueryService.findAll();
 
         for (ApiEntry entry : entries) {
             for (ApiRoute route : entry.getRoutes()) {
@@ -43,7 +44,7 @@ public class ApiRouteLocator implements RouteLocator {
             spec.method(route.getMethod());
 
         if (route.getVariables() != null)
-            spec.path(false, route.getVariables().split(","));
+            spec.path(false, route.getVariables());
 
         return spec.uri(uri);
     }
