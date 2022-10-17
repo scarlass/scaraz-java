@@ -194,9 +194,7 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     public ApiEntry addRoutes(long entryId, Iterable<CreateApiRouteDTO> dtos) {
-        ApiEntry entry = entryRepo.findById(entryId)
-                .orElseThrow();
-
+        ApiEntry entry = queryService.findEntryById(entryId);
         return addRoutes(entry, dtos);
     }
 

@@ -46,7 +46,8 @@
     <logger name="javax.xml.bind" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
-    <!--    <logger name="org.springframework" level="WARN"/>-->
+    <logger name="org.springframework.orm" level="WARN"/>
+    <!--        <logger name="org.springframework" level="WARN"/>-->
     <!--    <logger name="_org.springframework.web" level="WARN"/>-->
     <logger name="ch.qos.logback" level="WARN"/>
     <logger name="org.postgresql" level="WARN"/>

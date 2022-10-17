@@ -18,7 +18,7 @@ import java.util.Optional;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "dev.scaraz.gateway.repositories")
-@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware", dateTimeProviderRef = "utcDateTimeProvider")
+@EnableJpaAuditing(auditorAwareRef = "datasourceAuditorAware", dateTimeProviderRef = "utcDateTimeProvider")
 public class DatasourceConfiguration {
 
     @Bean

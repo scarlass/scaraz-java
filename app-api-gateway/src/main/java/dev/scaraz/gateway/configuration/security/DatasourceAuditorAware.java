@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component("springSecurityAuditorAware")
+@Component
 @RequiredArgsConstructor
 public class DatasourceAuditorAware implements AuditorAware<String> {
 

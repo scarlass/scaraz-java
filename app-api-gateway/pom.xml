@@ -56,25 +56,34 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.keycloak</groupId>-->
-<!--            <artifactId>keycloak-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.keycloak</groupId>-->
-<!--            <artifactId>keycloak-spring-security-adapter</artifactId>-->
-<!--            <version>${keycloak.spring.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.keycloak</groupId>-->
+        <!--            <artifactId>keycloak-spring-boot-starter</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.keycloak</groupId>-->
+        <!--            <artifactId>keycloak-spring-security-adapter</artifactId>-->
+        <!--            <version>${keycloak.spring.version}</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.security</groupId>-->
+        <!--            <artifactId>spring-security-oauth2-jose</artifactId>-->
+        <!--        </dependency>-->
 
         <!--    3rd Parties    -->
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-webflux</artifactId>
+            <version>${org.zalando.spring.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -147,9 +156,9 @@
                             <goal>process</goal>
                         </goals>
                         <configuration>
-<!--                            <processors>-->
-<!--                                <processor>org.hibernate.jpamodelgen</processor>-->
-<!--                            </processors>-->
+                            <!--                            <processors>-->
+                            <!--                                <processor>org.hibernate.jpamodelgen</processor>-->
+                            <!--                            </processors>-->
                         </configuration>
                     </execution>
                 </executions>

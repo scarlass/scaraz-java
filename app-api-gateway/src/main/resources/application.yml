@@ -40,11 +40,30 @@ spring:
       hibernate.id.new_generator_mappings: true
       hibernate.generate_statistics: true
       hibernate.jdbc.time_zone: Asia/Jakarta
-#  webflux:
+  #  webflux:
   cloud:
     gateway:
       loadbalancer:
         use404: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE:scaraz-dev}
+          jwk-set-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE:scaraz-dev}/protocol/openid-connect/certs
+        opaquetoken:
+          client-id: ${GATEWAY_CLIENT_ID:api-gateway}
+          client-secret: ${GATEWAY_CLIENT_SECRET}
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
 
 scaraz:
   app:

@@ -52,13 +52,6 @@ public class ApiResource {
     }
 
 
-    @GetMapping(path = "/refresh")
-    public ResponseEntity<?> refresh() {
-        apiService.refresh();
-        return ResponseEntity.ok().build();
-    }
-
-
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)

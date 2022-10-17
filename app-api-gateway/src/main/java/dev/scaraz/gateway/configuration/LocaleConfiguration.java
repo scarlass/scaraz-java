@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver;
+import org.zalando.problem.jackson.ProblemModule;
+import org.zalando.problem.violations.ConstraintViolationProblemModule;
 
 @Slf4j
 @Configuration
@@ -32,6 +34,8 @@ public class LocaleConfiguration extends AcceptHeaderLocaleContextResolver {
     @Bean
     public ObjectMapper provideObjectMapper() {
         return new ObjectMapper()
+                .registerModule(new ProblemModule())
+                .registerModule(new ConstraintViolationProblemModule())
                 .registerModule(new JavaTimeModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
