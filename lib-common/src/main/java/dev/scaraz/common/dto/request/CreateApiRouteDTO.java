@@ -6,14 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpMethod;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateApiRouteReqDTO {
+public class CreateApiRouteDTO {
 
+    @NotNull
     private HttpMethod method;
 
+    @NotNull
     private String path;
 
     private String description;

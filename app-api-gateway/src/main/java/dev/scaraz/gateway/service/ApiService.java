@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ApiService {
     void refresh();
 
-    ApiEntry create(CreateApiEntryReqDTO dto);
+    ApiEntry create(CreateApiEntryDTO dto);
 
     ApiEntry update(long entryId, UpdateApiEntryDTO dto);
 
@@ -20,10 +20,10 @@ public interface ApiService {
     ApiHost updateHost(long hostId, UpdateApiHostDTO dto);
 
     @Transactional
-    ApiEntry addRoutes(ApiEntry entry, Iterable<CreateApiRouteReqDTO> dtos);
+    ApiEntry addRoutes(ApiEntry entry, Iterable<CreateApiRouteDTO> dtos);
 
     @Transactional
-    ApiEntry addRoutes(long entryId, Iterable<CreateApiRouteReqDTO> dtos);
+    ApiEntry addRoutes(long entryId, Iterable<CreateApiRouteDTO> dtos);
 
     ApiRoute updateRoute(long routeId, UpdateApiRouteDTO dto);
 }

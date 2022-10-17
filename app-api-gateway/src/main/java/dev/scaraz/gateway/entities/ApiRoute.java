@@ -8,6 +8,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.HttpMethod;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,6 +28,7 @@ public class ApiRoute extends AuditingEntity {
     private long id;
 
     @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "ref_entry_id")
     private ApiEntry entry;
 
@@ -46,19 +51,31 @@ public class ApiRoute extends AuditingEntity {
     @Column
     private String description;
 
-    public String[] getVariables() {
-        if (StringUtils.isBlank(variables)) return null;
-        return variables.split(",");
+    public Set<String> getVariables() {
+        if (StringUtils.isBlank(variables)) return Set.of();
+        return Arrays.stream(variables.split(","))
+                .collect(Collectors.toSet());
     }
 
     public void setVariables(Iterable<String> variables) {
         if (variables == null) this.variables = null;
-        else for (String v : variables) addVariable(v);
+        else {
+            Set<String> set = new HashSet<>();
+            if (!StringUtils.isBlank(this.variables)) set.addAll(Set.of(this.variables.split(",")));
+            variables.forEach(set::add);
+            this.variables = String.join(",", set);
+        }
     }
 
     public void addVariable(String var) {
-        if (StringUtils.isBlank(variables)) variables = var;
-        else variables += "," + var;
+        if (StringUtils.isBlank(variables)) {
+            variables = var;
+            return;
+        }
+
+        Set<String> set = new HashSet<>(Set.of(var.split(",")));
+        set.add(var);
+        variables = String.join(",", set);
     }
 
     @Override
@@ -73,7 +90,6 @@ public class ApiRoute extends AuditingEntity {
                 .appendSuper(super.equals(o))
                 .append(getId(), apiRoute.getId())
                 .append(isActive(), apiRoute.isActive())
-                .append(getEntry(), apiRoute.getEntry())
                 .append(getMethod(), apiRoute.getMethod())
                 .append(getPath(), apiRoute.getPath())
                 .append(getVariables(), apiRoute.getVariables())
@@ -86,7 +102,6 @@ public class ApiRoute extends AuditingEntity {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(getId())
-                .append(getEntry())
                 .append(isActive())
                 .append(getMethod())
                 .append(getPath())

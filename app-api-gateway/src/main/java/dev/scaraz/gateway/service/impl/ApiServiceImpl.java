@@ -15,11 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,35 +55,25 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     @Transactional
-    public ApiEntry create(CreateApiEntryReqDTO dto) {
-        if (!dto.getPrefix().startsWith("/"))
-            dto.setPrefix("/" + dto.getPrefix());
+    public ApiEntry create(CreateApiEntryDTO dto) {
 
-        boolean startWithApi = Pattern.compile("^/api", Pattern.CASE_INSENSITIVE)
-                .matcher(dto.getPrefix())
-                .matches();
+        if (dto.getPrefix() != null) {
+            if (!dto.getPrefix().startsWith("/"))
+                dto.setPrefix("/" + dto.getPrefix());
 
-        if (startWithApi) {
-            throw HttpClientErrorException.create(
-                    "Reserved prefix",
-                    HttpStatus.BAD_REQUEST,
-                    translator.badRequestTitle(),
-                    null,
-                    null,
-                    null
-            );
+            checkEntryPrefix(dto.getPrefix());
         }
-        else if (entryRepo.existsByPrefixContainsIgnoreCase(dto.getPrefix())) {
-            throw HttpClientErrorException.create(
-                    "Duplicate prefix",
-                    HttpStatus.BAD_REQUEST,
-                    translator.badRequestTitle(),
-                    null,
-                    null,
-                    null
-            );
-        }
+        else {
+            String name = dto.getName();
+            dto.setPrefix(name.toLowerCase());
+            Pattern.compile("([.\"'()$%#@!^&*,<>\\[\\]\\-])").matcher(name).results()
+                    .forEach(match -> {
+                        dto.setPrefix(dto.getPrefix()
+                                .replace(match.group(1), "_"));
+                    });
 
+            dto.setPrefix("/" + String.join("", dto.getPrefix().split(" ")));
+        }
 
         ApiEntry entry = ApiEntry.builder()
                 .name(dto.getName())
@@ -91,6 +85,7 @@ public class ApiServiceImpl implements ApiService {
 
         entry = entryRepo.save(entry);
         return addRoutes(entry, dto.getRoutes());
+//        return entry;
     }
 
     @Override
@@ -167,13 +162,15 @@ public class ApiServiceImpl implements ApiService {
 
     @Override
     @Transactional
-    public ApiEntry addRoutes(ApiEntry entry, Iterable<CreateApiRouteReqDTO> dtos) {
+    public ApiEntry addRoutes(ApiEntry entry, Iterable<CreateApiRouteDTO> dtos) {
         List<ApiRoute> routes = new ArrayList<>();
         Pattern pattern = Pattern.compile(PATH_VARIABLE_PATTERN, Pattern.CASE_INSENSITIVE);
 
-        for (CreateApiRouteReqDTO dto : dtos) {
+        for (CreateApiRouteDTO dto : dtos) {
             if (!dto.getPath().startsWith("/"))
                 dto.setPath("/" + dto.getPath());
+
+            checkRoutePath(entry.getId(), dto.getPath(), null);
 
             ApiRoute route = ApiRoute.builder()
                     .entry(entry)
@@ -196,7 +193,7 @@ public class ApiServiceImpl implements ApiService {
     }
 
     @Override
-    public ApiEntry addRoutes(long entryId, Iterable<CreateApiRouteReqDTO> dtos) {
+    public ApiEntry addRoutes(long entryId, Iterable<CreateApiRouteDTO> dtos) {
         ApiEntry entry = entryRepo.findById(entryId)
                 .orElseThrow();
 
@@ -218,6 +215,8 @@ public class ApiServiceImpl implements ApiService {
                 .ifPresent(route::setMethod);
 
         if (!StringUtils.isBlank(dto.getPath())) {
+            checkRoutePath(route.getEntry().getId(), dto.getPath(), routeId);
+
             Pattern pattern = Pattern.compile(PATH_VARIABLE_PATTERN, Pattern.CASE_INSENSITIVE);
             List<String> vars = getPathVariables(pattern, dto.getPath());
             route.setVariables(vars);
@@ -227,6 +226,7 @@ public class ApiServiceImpl implements ApiService {
         return route;
     }
 
+
     private List<String> getPathVariables(Pattern pattern, String path) {
         Matcher matcher = pattern.matcher(path);
         List<MatchResult> results = matcher.results().collect(Collectors.toList());
@@ -235,5 +235,56 @@ public class ApiServiceImpl implements ApiService {
         return results.stream()
                 .map(matchResult -> matchResult.group(1))
                 .collect(Collectors.toList());
+    }
+
+    private void checkEntryPrefix(String prefix) {
+        boolean startWithApi = Pattern.compile("^/api", Pattern.CASE_INSENSITIVE)
+                .matcher(prefix)
+                .matches();
+
+        HttpHeaders header = new HttpHeaders();
+        header.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        if (startWithApi) {
+            throw HttpClientErrorException.create(
+                    "Reserved prefix: \"/api\"",
+                    HttpStatus.BAD_REQUEST,
+                    translator.badRequestTitle(),
+                    header,
+                    null,
+                    StandardCharsets.UTF_8
+            );
+        }
+        else if (entryRepo.existsByPrefixContainsIgnoreCase(prefix)) {
+            throw HttpClientErrorException.create(
+                    "Duplicate prefix :" + prefix,
+                    HttpStatus.BAD_REQUEST,
+                    translator.badRequestTitle(),
+                    header,
+                    null,
+                    StandardCharsets.UTF_8
+            );
+        }
+
+    }
+
+    private void checkRoutePath(long entryId, String path, @Nullable Long routeId) {
+        boolean isDuplicatePath = routeId != null ?
+                                  routeRepo.existsByEntryIdAndPathContainingIgnoreCaseAndIdIsNot(entryId, path, routeId) :
+                                  routeRepo.existsByEntryIdAndPathContainingIgnoreCase(entryId, path);
+
+        if (isDuplicatePath) throwBadRequest("Duplicate path: " + path);
+    }
+
+    private void throwBadRequest(String message) {
+        HttpHeaders header = new HttpHeaders();
+        header.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        throw HttpClientErrorException.create(
+                message,
+                HttpStatus.BAD_REQUEST,
+                translator.badRequestTitle(),
+                header,
+                null,
+                StandardCharsets.UTF_8
+        );
     }
 }

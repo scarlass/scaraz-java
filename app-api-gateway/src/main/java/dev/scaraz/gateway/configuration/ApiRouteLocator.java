@@ -30,15 +30,21 @@ public class ApiRouteLocator implements RouteLocator {
         RouteLocatorBuilder.Builder routesBuilder = routeLocatorBuilder.routes();
         List<ApiEntry> entries = apiQueryService.findAll();
 
+        final boolean isAllProfile = gatewayProperties
+                .getHostProfile()
+                .equals(HostProfile.ALL);
+
         for (ApiEntry entry : entries) {
             for (ApiHost host : entry.getHosts()) {
                 HostProfile profile = host.getProfile();
 
-                boolean shouldAttachRoute = gatewayProperties.getHostProfile().equals(HostProfile.ALL)
-                        || profile.equals(gatewayProperties.getHostProfile());
+                boolean shouldAttachRoute = isAllProfile || profile.equals(gatewayProperties.getHostProfile());
 
                 if (!shouldAttachRoute) continue;
+                else if (!host.isActive()) continue;
+
                 for (ApiRoute route : entry.getRoutes()) {
+                    if (!route.isActive()) continue;
                     routesBuilder.route(
                             String.valueOf(route.getId()),
                             predicateSpec -> attachRoute(entry, host, route, predicateSpec));

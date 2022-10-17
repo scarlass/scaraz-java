@@ -12,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ApiEntryDTO implements Serializable {
 
-    private long id;
+    @Builder.Default
+    private long id = -1;
 
     private String name;
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class ApiMapper {
                 .name(o.getName())
                 .prefix(o.getPrefix())
                 .description(o.getDescription())
-                .tags(Arrays.asList(o.getTags()))
+                .tags(new ArrayList<>(o.getTags()))
                 .hosts(o.getHosts().stream()
                         .map(this::toDTO)
                         .collect(Collectors.toList()))
@@ -47,7 +48,7 @@ public class ApiMapper {
                 .active(o.isActive())
                 .method(o.getMethod())
                 .path(o.getPath())
-                .variables(Arrays.asList(o.getVariables()))
+                .variables(new ArrayList<>(o.getVariables()))
                 .description(o.getDescription())
                 .build();
     }

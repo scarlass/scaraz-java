@@ -9,8 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -51,19 +53,31 @@ public class ApiEntry extends AuditingEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "entry")
     private Set<ApiRoute> routes = new HashSet<>();
 
-    public String[] getTags() {
-        if (StringUtils.isBlank(tags)) return null;
-        return tags.split(",");
+    public Set<String> getTags() {
+        if (StringUtils.isBlank(tags)) return Set.of();
+        return Arrays.stream(tags.split(","))
+                .collect(Collectors.toSet());
     }
 
     public void setTags(Iterable<String> tags) {
         if (tags == null) this.tags = null;
-        else tags.forEach(this::addTag);
+        else {
+            Set<String> set = new HashSet<>();
+            if (!StringUtils.isBlank(this.tags)) set.addAll(Set.of(this.tags.split(",")));
+            tags.forEach(set::add);
+            this.tags = String.join(",", set);
+        }
     }
 
     public void addTag(String tag) {
-        if (StringUtils.isBlank(tag)) this.tags = tag;
-        else tags += "," + tag;
+        if (StringUtils.isBlank(tags)) {
+            tags = tag;
+            return;
+        }
+
+        Set<String> set = new HashSet<>(Set.of(tags.split(",")));
+        set.add(tag);
+        tags = String.join(",", set);
     }
 
     @Override

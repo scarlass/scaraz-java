@@ -25,11 +25,16 @@ public class ApiHost extends AuditingEntity implements Serializable {
     private long id;
 
     @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(name = "ref_entry_id")
     private ApiEntry entry;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
     private HostProfile profile;
+
+    @Column
+    private boolean active = true;
 
     @Column
     private String host;

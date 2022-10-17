@@ -46,7 +46,8 @@
     <logger name="javax.xml.bind" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
-<!--    <logger name="org.springframework" level="WARN"/>-->
+    <!--    <logger name="org.springframework" level="WARN"/>-->
+    <!--    <logger name="_org.springframework.web" level="WARN"/>-->
     <logger name="ch.qos.logback" level="WARN"/>
     <logger name="org.postgresql" level="WARN"/>
     <logger name="com.codahale.metrics" level="WARN"/>
@@ -82,7 +83,6 @@
     <logger name="netty" level="WARN"/>
     <logger name="unknown.jul.logger" level="WARN"/>
     <logger name="feign" level="WARN"/>
-<!--    <logger name="_org.springframework.web" level="WARN"/>-->
     <logger name="springfox" level="WARN"/>
     <logger name="io.swagger" level="WARN"/>
     <logger name="okhttp3" level="WARN"/>

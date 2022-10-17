@@ -1,6 +1,8 @@
 package dev.scaraz.gateway.web.rest;
 
 import dev.scaraz.common.dto.request.*;
+import dev.scaraz.common.dto.response.api.ApiEntryDTO;
+import dev.scaraz.common.utils.PaginationUtil;
 import dev.scaraz.gateway.entities.ApiEntry;
 import dev.scaraz.gateway.entities.ApiHost;
 import dev.scaraz.gateway.entities.ApiRoute;
@@ -9,6 +11,8 @@ import dev.scaraz.gateway.service.ApiQueryService;
 import dev.scaraz.gateway.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,11 +32,12 @@ public class ApiResource {
     private final ApiQueryService apiQueryService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(Pageable pageable) {
+        Page<ApiEntryDTO> page = apiQueryService.findAll(pageable)
+                .map(apiMapper::toDTO);
         return new ResponseEntity<>(
-                apiQueryService.findAll().stream()
-                        .map(apiMapper::toDTO)
-                        .collect(Collectors.toList()),
+                page.getContent(),
+                PaginationUtil.getPaginationHeader(page),
                 HttpStatus.OK
         );
     }
@@ -58,7 +62,7 @@ public class ApiResource {
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> create(@RequestBody @Valid CreateApiEntryReqDTO dto) {
+    public ResponseEntity<?> create(@RequestBody @Valid CreateApiEntryDTO dto) {
         ApiEntry entry = apiService.create(dto);
         return new ResponseEntity<>(
                 apiMapper.toDTO(entry),
@@ -116,7 +120,7 @@ public class ApiResource {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createRoutes(
             @PathVariable("entryId") long entryId,
-            @RequestBody @Valid List<CreateApiRouteReqDTO> dtos
+            @RequestBody @Valid List<CreateApiRouteDTO> dtos
     ) {
         ApiEntry entry = apiService.addRoutes(entryId, dtos);
         return new ResponseEntity<>(

@@ -13,12 +13,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateApiEntryReqDTO {
+public class CreateApiEntryDTO {
 
     @NotNull
     private String name;
 
-    @NotNull
     private String prefix;
 
     private String description;
@@ -29,7 +28,7 @@ public class CreateApiEntryReqDTO {
     private List<CreateApiHostDTO> hosts = new ArrayList<>();
 
     @Builder.Default
-    private List<CreateApiRouteReqDTO> routes = new ArrayList<>();
+    private List<CreateApiRouteDTO> routes = new ArrayList<>();
 
 
 }

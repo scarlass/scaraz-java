@@ -7,10 +7,10 @@ create table t_api_entry
     description text,
     tags        text,
 
-    created_by  varchar(100) not null,
-    created_at  timestamp(0) not null default CURRENT_TIMESTAMP,
-    updated_by  varchar(100)          default null::character varying,
-    updated_at  timestamp(0)          default null::timestamp(0)
+    created_by  varchar(100)        not null,
+    created_at  timestamp(0)        not null default CURRENT_TIMESTAMP,
+    updated_by  varchar(100)                 default null::character varying,
+    updated_at  timestamp(0)                 default null::timestamp(0)
 );
 
 create table t_api_host
@@ -36,9 +36,11 @@ create table t_api_route
     id           serial primary key,
     ref_entry_id bigint       not null,
 
+    active       boolean      not null default false,
     method       varchar(15)  not null,
     path         varchar(255) not null,
     variables    text,
+    description  text,
 
     created_by   varchar(100) not null,
     created_at   timestamp(0) not null default CURRENT_TIMESTAMP,

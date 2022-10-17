@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ApiRouteRepo extends JpaRepository<ApiRoute, Long> {
+
+    boolean existsByEntryIdAndPathContainingIgnoreCase(long entryId, String predicatePath);
+    boolean existsByEntryIdAndPathContainingIgnoreCaseAndIdIsNot(long entryId, String predicatePath, long routeId);
+
 }
