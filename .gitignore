@@ -1,5 +1,7 @@
 /.idea
 /.logs
-*/target/**
+**/target/**
 
 .env
+.env.docker
+docker-compose.yml

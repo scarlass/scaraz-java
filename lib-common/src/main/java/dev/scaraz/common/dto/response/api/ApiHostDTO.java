@@ -16,6 +16,8 @@ public class ApiHostDTO {
 
     private Long entryId;
 
+    private boolean active;
+
     private HostProfile profile;
 
     private String host;
