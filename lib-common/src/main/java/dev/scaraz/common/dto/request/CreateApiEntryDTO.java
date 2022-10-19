@@ -27,8 +27,5 @@ public class CreateApiEntryDTO {
     @Builder.Default
     private List<CreateApiHostDTO> hosts = new ArrayList<>();
 
-    @Builder.Default
-    private List<CreateApiRouteDTO> routes = new ArrayList<>();
-
 
 }

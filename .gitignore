@@ -1,6 +1,7 @@
 /.idea
 /.logs
 **/target/**
+app/*/.mvn
 
 .env
 .env.docker

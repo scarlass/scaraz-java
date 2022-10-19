@@ -1,0 +1,12 @@
+server:
+  port: ${PORT_GATEWAY:9231}
+
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}
+          jwk-set-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}/protocol/openid-connect/certs

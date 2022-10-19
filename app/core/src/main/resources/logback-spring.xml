@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+
+    <springProperty scope="context" name="logback_level" source="scaraz.app.log-level"/>
+    <springProperty scope="context" name="logback_dir" source="scaraz.app.log-directory"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>utf-8</charset>
+            <!--            <Pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS,Asia/Jakarta}) %clr[direct-v2-svc,%thread,%X{traceId:-},%X{spanId:-}] %highlight(%-5p) %clr(%logger{100}){blue} %clr(%m){faint}%n</Pattern>-->
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logback_dir}/sc-core.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logback_dir}/archive/sc-core-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>utf-8</charset>
+            <!--            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS,Asia/Jakarta} [%thread,%X{traceId:-},%X{spanId:-}] %-5p %logger{0} %m%n</Pattern>-->
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="dev.scaraz.gateway" level="${logback_level}"/>
+
+    <logger name="sun.net" level="OFF"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="com.hazelcast.internal.partition" level="OFF"/>
+    <logger name="jdk.event" level="OFF"/>
+    <logger name="javax.management" level="WARN"/>
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <!--        <logger name="org.springframework" level="WARN"/>-->
+    <!--    <logger name="_org.springframework.web" level="WARN"/>-->
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="org.postgresql" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.ryantenney" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="io.undertow" level="WARN"/>
+    <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+    <logger name="org.ehcache" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.bson" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.springdoc" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="net.sf.dynamicreports" level="WARN"/>
+    <logger name="net.sf.jasperreports" level="WARN"/>
+    <logger name="org.flywaydb.core" level="WARN"/>
+    <logger name="reactor.netty" level="WARN"/>
+    <logger name="io.netty" level="WARN"/>
+    <logger name="io.rsocket" level="WARN"/>
+    <logger name="io.grpc.netty" level="WARN"/>
+    <logger name="com.netflix" level="WARN"/>
+    <logger name="org.zalando.logbook" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+    <logger name="org.keycloak" level="WARN"/>
+    <logger name="org.springdoc" level="WARN"/>
+    <logger name="io.swagger" level="WARN"/>
+    <logger name="net.sf.jett" level="WARN"/>
+    <logger name="io.minio" level="${logback_level}"/>
+    <logger name="netty" level="WARN"/>
+    <logger name="unknown.jul.logger" level="WARN"/>
+    <logger name="feign" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="io.swagger" level="WARN"/>
+    <logger name="okhttp3" level="WARN"/>
+    <logger name="reactor" level="WARN"/>
+    <logger name="io.micrometer" level="WARN"/>
+    <logger name="Validator" level="WARN"/>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <root level="${logback_level}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

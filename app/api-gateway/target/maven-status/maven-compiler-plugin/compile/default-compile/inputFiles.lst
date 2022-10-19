@@ -1,1 +1,9 @@
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\services\ApiRouteService.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\clients\CoreClient.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\configuration\SecurityConfiguration.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\configuration\ApiConfiguration.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\configuration\RetrofitConfiguration.java
 D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\ApiGatewayApplication.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\configuration\ApiGatewayProperties.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\services\impl\ApiRouteServiceImpl.java
+D:\webs\scaraz\java\app\api-gateway\src\main\java\dev\scaraz\gateway\clients\KeycloakClient.java

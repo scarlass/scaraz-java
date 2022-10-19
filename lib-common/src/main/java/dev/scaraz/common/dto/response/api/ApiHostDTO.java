@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ApiHostDTO {
 
-    private long id;
+    private String id;
 
-    private Long entryId;
+    private String entryId;
 
     private boolean active;
-
-    private HostProfile profile;
 
     private String host;
 

@@ -1,1 +1,10 @@
+dev\scaraz\gateway\configuration\RetrofitConfiguration.class
+dev\scaraz\gateway\clients\KeycloakClient.class
+dev\scaraz\gateway\clients\CoreClient.class
+dev\scaraz\gateway\configuration\ApiConfiguration.class
+dev\scaraz\gateway\services\impl\ApiRouteServiceImpl.class
 dev\scaraz\gateway\ApiGatewayApplication.class
+META-INF\spring-configuration-metadata.json
+dev\scaraz\gateway\configuration\ApiGatewayProperties.class
+dev\scaraz\gateway\services\ApiRouteService.class
+dev\scaraz\gateway\configuration\SecurityConfiguration.class

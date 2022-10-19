@@ -1,0 +1,48 @@
+server:
+  port: ${PORT_CORE:9231}
+
+spring:
+  application:
+    name: core-svc
+
+  main:
+    allow-bean-definition-overriding: true
+    log-startup-info: false
+
+  jackson:
+    default-property-inclusion: NON_NULL
+    date-format: com.fasterxml.jackson.databind.util.StdFormat
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://${DATABASE_HOSTNAME:127.0.0.1}:${DATABASE_PORT:10432}/${CORE_DATABASE:sc-core}
+    username: ${DATABASE_USER:}
+    password: ${DATABASE_PASSWORD:}
+    hikari:
+      pool-name: p:scaraz-gateway
+      maximum-pool-size: 20
+      connection-timeout: 60000
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.generate_statistics: true
+      hibernate.jdbc.time_zone: Asia/Jakarta
+  flyway:
+    enabled: true
+    table: migrations_core_svc
+    out-of-order: true
+    connect-retries: 3
+    connect-retries-interval: 10
+  cloud:
+    discovery:
+      enabled: false
+
+scaraz:
+  app:
+    log-level: ${LOG_LEVEL:debug}
+    log-directory: D:\webs\scaraz\java
+    async:
+      core-pool-size: 2
+      max-pool-size: 50
+      queue-capacity: 10_000

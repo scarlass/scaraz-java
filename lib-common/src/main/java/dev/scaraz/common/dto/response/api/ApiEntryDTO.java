@@ -12,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ApiEntryDTO implements Serializable {
 
-    @Builder.Default
-    private long id = -1;
+    private String id;
 
     private String name;
 
@@ -24,7 +23,5 @@ public class ApiEntryDTO implements Serializable {
     private List<String> tags;
 
     private List<ApiHostDTO> hosts;
-
-    private List<ApiRouteDTO> routes;
 
 }
