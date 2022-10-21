@@ -5,4 +5,3 @@ app/*/.mvn
 
 .env
 .env.docker
-docker-compose.yml

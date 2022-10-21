@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  sc-gateway:
+    container_name: sc-gateway
+    depends_on:
+      - sc-core
+    build:
+      context: ./app/api-gateway/
+      dockerfile: DockerFile
+    env_file:
+      - .env
+    ports:
+      - "9230:9230"
+  sc-core:
+    container_name: sc-core
+    build:
+      context: ./app/core
+      dockerfile: DockerFile
+    env_file:
+      - .env
+    ports:
+      - "9231:9231"
