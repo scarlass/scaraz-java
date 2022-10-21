@@ -5,8 +5,10 @@ services:
     depends_on:
       - sc-core
     build:
-      context: ./app/api-gateway/
+      context: ./app/api-gateway
       dockerfile: DockerFile
+    networks:
+      - global
     env_file:
       - .env
     ports:
@@ -20,3 +22,7 @@ services:
       - .env
     ports:
       - "9231:9231"
+
+networks:
+  global:
+    external: true
