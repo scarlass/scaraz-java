@@ -3,11 +3,13 @@ package dev.scaraz.core.service.impl;
 import dev.scaraz.common.dto.request.CreateApiEntryDTO;
 import dev.scaraz.common.dto.request.CreateApiHostDTO;
 import dev.scaraz.common.dto.request.UpdateApiEntryDTO;
+import dev.scaraz.common.dto.request.UpdateApiHostDTO;
 import dev.scaraz.core.datasource.domains.ApiEntry;
 import dev.scaraz.core.datasource.domains.ApiHost;
 import dev.scaraz.core.datasource.repositories.ApiEntryRepo;
 import dev.scaraz.core.datasource.repositories.ApiHostRepo;
 import dev.scaraz.core.service.ApiService;
+import dev.scaraz.core.web.query.ApiQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class ApiServiceImpl implements ApiService {
 
     private final ApiEntryRepo entryRepo;
     private final ApiHostRepo hostRepo;
+
+    private final ApiQueryService queryService;
 
     @Override
     @Transactional
@@ -93,6 +97,30 @@ public class ApiServiceImpl implements ApiService {
             entry.setHosts(new HashSet<>(hostRepo.saveAll(hosts)));
 
         return entry;
+    }
+
+    @Override
+    @Transactional
+    public ApiHost updateHost(String hostId, UpdateApiHostDTO o) {
+        ApiHost host = queryService.findHostById(hostId);
+
+        boolean refresh = false;
+
+        if (o.getHost() != null) {
+            refresh = true;
+            host.setHost(o.getHost());
+        }
+
+        if (o.getActive() != null) {
+            refresh = true;
+            host.setActive(o.getActive());
+        }
+
+        Optional.ofNullable(o.getDescription())
+                .ifPresent(host::setDescription);
+
+        host = hostRepo.save(host);
+        return host;
     }
 
 }

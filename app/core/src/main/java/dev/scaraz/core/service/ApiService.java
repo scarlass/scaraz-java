@@ -3,7 +3,9 @@ package dev.scaraz.core.service;
 import dev.scaraz.common.dto.request.CreateApiEntryDTO;
 import dev.scaraz.common.dto.request.CreateApiHostDTO;
 import dev.scaraz.common.dto.request.UpdateApiEntryDTO;
+import dev.scaraz.common.dto.request.UpdateApiHostDTO;
 import dev.scaraz.core.datasource.domains.ApiEntry;
+import dev.scaraz.core.datasource.domains.ApiHost;
 
 public interface ApiService {
     ApiEntry create(CreateApiEntryDTO o);
@@ -13,4 +15,6 @@ public interface ApiService {
     ApiEntry createHosts(String entryId, Iterable<CreateApiHostDTO> createHosts);
 
     ApiEntry createHosts(ApiEntry entry, Iterable<CreateApiHostDTO> createHosts);
+
+    ApiHost updateHost(String hostId, UpdateApiHostDTO o);
 }

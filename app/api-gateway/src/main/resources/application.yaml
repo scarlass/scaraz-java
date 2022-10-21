@@ -1,5 +1,5 @@
 server:
-  port: ${PORT_GATEWAY:9231}
+  port: ${PORT_GATEWAY:9230}
 
 spring:
   application:
@@ -10,3 +10,12 @@ spring:
         jwt:
           issuer-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}
           jwk-set-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}/protocol/openid-connect/certs
+
+scaraz:
+  app:
+    retrofit:
+      log-level: basic
+  gateway:
+    core-svc-url: ${GATEWAY_CORE_URL:http://127.0.0.1:9231}
+    kc-client-id: ${GATEWAY_CLIENT_ID:api-gateway}
+    kc-client-secret: ${GATEWAY_CLIENT_SECRET:7JQpbZAud0CgEEHuGRSracFTHnyeNvdm}

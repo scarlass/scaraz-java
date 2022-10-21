@@ -37,11 +37,23 @@ spring:
   cloud:
     discovery:
       enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}
+          jwk-set-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}/protocol/openid-connect/certs
+
+keycloak:
+  auth-server-url: ${AUTH_ISSUER:https://auth.scaraz.dev}
+  realm: ${AUTH_SCOPE}
+  resource: sc-cores
+  bearer-only: true
 
 scaraz:
   app:
     log-level: ${LOG_LEVEL:debug}
-    log-directory: D:\webs\scaraz\java
+    log-directory: ${LOG_DIR:D:\webs\scaraz\java}
     async:
       core-pool-size: 2
       max-pool-size: 50

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateApiHostDTO {
 
-    private HostProfile profile;
+    private Boolean active;
 
     @IsURL
     private String host;

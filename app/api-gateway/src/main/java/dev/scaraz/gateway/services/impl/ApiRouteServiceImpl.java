@@ -9,8 +9,6 @@ import dev.scaraz.gateway.services.ApiRouteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,41 +27,59 @@ public class ApiRouteServiceImpl implements ApiRouteService {
 
     private String getToken(boolean retry) {
         if (token == null || retry) {
-            Response<ObjectNode> response = keycloakClient.accessToken(
-                    "client_credentials",
-                    apiGatewayProperties.getKcClientId(),
-                    apiGatewayProperties.getKcClientSecret());
+            return keycloakClient.accessToken(
+                            "client_credentials",
+                            apiGatewayProperties.getKcClientId(),
+                            apiGatewayProperties.getKcClientSecret()
+                    ).map(response -> {
+                        log.debug("Get Token success ? {}", response.isSuccessful());
+                        if (response.isSuccessful()) {
+                            ObjectNode json = response.body();
+                            String access_token = json.get("access_token").asText();
+                            String token_type = json.get("token_type").asText();
+                            return this.token = token_type + " " + access_token;
+                        }
 
-            if (response.isSuccessful()) {
-                ObjectNode json = response.body();
-                String access_token = json.get("access_token").asText();
-                String token_type = json.get("token_type").asText();
-                this.token = token_type + " " + access_token;
-            }
+                        try {
+                            Thread.sleep(1000);
+                        }
+                        catch (InterruptedException e) {
+                        }
+
+                        return getToken(true);
+                    })
+                    .toBlocking()
+                    .single();
         }
         return token;
     }
 
     @Override
     public List<ApiEntryDTO> getAllEntries(int retryAttempt) {
-        Response<List<ApiEntryDTO>> response = coreClient.getAllEntries(getToken(false));
-        if (!response.isSuccessful()) {
-            if (response.code() == 401 && retryAttempt > 0) {
-                try {
-                    Thread.sleep(500);
-                }
-                catch (InterruptedException e) {}
-                getToken(true);
-                return getAllEntries(retryAttempt - 1);
-            }
+        return coreClient.getAllEntries(getToken(false))
+                .map(response -> {
+                    if (response.isSuccessful()) return response.body();
 
-            if (retryAttempt > 0)
-                return getAllEntries(retryAttempt - 1);
+                    if (response.code() == 401 && retryAttempt > 0) {
+                        getToken(true);
 
-            return new ArrayList<>();
-        }
+                        try {
+                            Thread.sleep(1000);
+                        }
+                        catch (InterruptedException e) {
+                        }
 
-        return response.body();
+                        log.debug("Unauthorized when fetch entries...");
+                        return getAllEntries(retryAttempt - 1);
+                    }
+
+                    if (retryAttempt > 0)
+                        return getAllEntries(retryAttempt - 1);
+
+                    return new ArrayList<ApiEntryDTO>();
+                })
+                .toBlocking()
+                .single();
     }
 
 }

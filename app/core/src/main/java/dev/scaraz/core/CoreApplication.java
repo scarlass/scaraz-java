@@ -29,7 +29,6 @@ public class CoreApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(CoreApplication.class);
-        ScarazInitializer.setDefaultProfile(app);
 
         ConfigurableApplicationContext ctx = app.run(args);
         log.info("Application running on port {}", ctx.getEnvironment().getProperty("server.port"));

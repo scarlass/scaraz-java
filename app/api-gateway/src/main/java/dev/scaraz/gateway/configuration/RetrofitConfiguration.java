@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.time.Duration;
@@ -23,6 +24,13 @@ public class RetrofitConfiguration {
     private final ObjectMapper objectMapper;
 
     @Bean
+    public HttpLoggingInterceptor loggingInterceptor() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(appProperties.getRetrofit().getLogLevel());
+        return interceptor;
+    }
+
+    @Bean
     public OkHttpClient okHttpClient() {
         AppProperties.Retrofit retrofitProp = appProperties.getRetrofit();
         return new OkHttpClient.Builder()
@@ -33,21 +41,12 @@ public class RetrofitConfiguration {
                 .build();
     }
 
-    public Retrofit create(String baseUrl) {
+    @Bean
+    public Retrofit.Builder retrofitBuilder(OkHttpClient client) {
         return new Retrofit.Builder()
-                .client(okHttpClient())
-                .baseUrl(baseUrl)
-                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                .build();
+                .client(client)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper));
     }
 
-    public <T> T create(String baseUrl, Class<T> service) {
-        return create(baseUrl).create(service);
-    }
-
-    private HttpLoggingInterceptor loggingInterceptor() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(appProperties.getRetrofit().getLogLevel());
-        return interceptor;
-    }
 }
