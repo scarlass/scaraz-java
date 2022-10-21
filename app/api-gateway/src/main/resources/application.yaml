@@ -13,6 +13,8 @@ spring:
 
 scaraz:
   app:
+    log-directory: ${LOG_DIR}
+    log-level: ${LOG_LEVEL}
     retrofit:
       log-level: basic
   gateway:
