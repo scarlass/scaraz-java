@@ -1,0 +1,2 @@
+server:
+  port: ${PORT_GATEWAY:9230}

@@ -1,1 +1,11 @@
-FROM 
+FROM openjdk:11-jdk-slim
+
+WORKDIR /opt/scaraz/gateway
+
+ENV ENTRY_JAR=api-gateway.jar
+ENV PROFILE_ENV=prod
+ENV PORT_GATEWAY=9230
+
+COPY ./target/*.jar ./$ENTRY_JAR
+
+ENTRYPOINT ["java", "-jar", "$ENTRY_JAR", "-Dspring.profiles.active=$PROFILE_ENV", "-Dserver.port=$PORT_GATEWAY"]
