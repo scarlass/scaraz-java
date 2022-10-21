@@ -23,21 +23,17 @@ public class ApiHost extends AuditingEntity {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-
     @Column
+    @Builder.Default
     private boolean active = true;
-
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "ref_entry_id")
     private ApiEntry entry;
-
     @Column
     private String host;
-
     @Column
     private String description;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,7 +50,6 @@ public class ApiHost extends AuditingEntity {
                 .append(getDescription(), that.getDescription())
                 .isEquals();
     }
-
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
