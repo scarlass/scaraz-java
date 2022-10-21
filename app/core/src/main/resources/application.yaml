@@ -12,6 +12,7 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
     date-format: com.fasterxml.jackson.databind.util.StdFormat
+
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://${DATABASE_HOSTNAME:127.0.0.1}:${DATABASE_PORT:10432}/${CORE_DATABASE:sc-core}
@@ -49,8 +50,6 @@ keycloak:
   realm: ${AUTH_SCOPE}
   resource: ${AUTH_RESOURCE}
   bearer-only: true
-  credentials:
-    clinet-secret: ${AUTH_SECRET}
 
 scaraz:
   app:
