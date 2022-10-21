@@ -5,4 +5,4 @@ WORKDIR /opt/scaraz/core
 ENV ENTRY_JAR=sc-core.jar
 COPY ./target/*.jar ./$ENTRY_JAR
 
-ENTRYPOINT ["java", "-jar", "$ENTRY_JAR"]
+ENTRYPOINT ["java", "-jar", "./sc-core.jar"]

@@ -47,8 +47,10 @@ spring:
 keycloak:
   auth-server-url: ${AUTH_ISSUER:https://auth.scaraz.dev}
   realm: ${AUTH_SCOPE}
-  resource: sc-cores
+  resource: ${AUTH_RESOURCE}
   bearer-only: true
+  credentials:
+    clinet-secret: ${AUTH_SECRET}
 
 scaraz:
   app:
