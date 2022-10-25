@@ -1,7 +1,7 @@
 package dev.scaraz.core.web.query.impl;
 
-import dev.scaraz.core.datasource.domains.ApiEntry;
-import dev.scaraz.core.datasource.domains.ApiHost;
+import dev.scaraz.core.datasource.domains.api.ApiEntry;
+import dev.scaraz.core.datasource.domains.api.ApiHost;
 import dev.scaraz.core.datasource.repositories.ApiEntryRepo;
 import dev.scaraz.core.datasource.repositories.ApiHostRepo;
 import dev.scaraz.core.web.query.ApiQueryService;

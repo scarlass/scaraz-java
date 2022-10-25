@@ -1,14 +1,15 @@
 package dev.scaraz.gateway.configuration;
 
-import dev.scaraz.common.configuration.properties.AppProperties;
 import dev.scaraz.gateway.clients.CoreClient;
 import dev.scaraz.gateway.clients.KeycloakClient;
 import dev.scaraz.gateway.configuration.properties.ApiGatewayProperties;
+import dev.scaraz.http.ScHttpConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import retrofit2.Retrofit;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
+@Import(ScHttpConfiguration.class)
 public class ClientConfiguration {
 
     private final OAuth2ResourceServerProperties resourceServerProperties;

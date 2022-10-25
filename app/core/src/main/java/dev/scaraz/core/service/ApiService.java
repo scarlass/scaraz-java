@@ -4,8 +4,8 @@ import dev.scaraz.common.dto.request.CreateApiEntryDTO;
 import dev.scaraz.common.dto.request.CreateApiHostDTO;
 import dev.scaraz.common.dto.request.UpdateApiEntryDTO;
 import dev.scaraz.common.dto.request.UpdateApiHostDTO;
-import dev.scaraz.core.datasource.domains.ApiEntry;
-import dev.scaraz.core.datasource.domains.ApiHost;
+import dev.scaraz.core.datasource.domains.api.ApiEntry;
+import dev.scaraz.core.datasource.domains.api.ApiHost;
 
 public interface ApiService {
     ApiEntry create(CreateApiEntryDTO o);

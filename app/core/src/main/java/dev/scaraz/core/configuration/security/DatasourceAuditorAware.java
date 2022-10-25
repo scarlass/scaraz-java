@@ -16,6 +16,11 @@ public class DatasourceAuditorAware implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
+        try {
+            return Optional.of(appSecurity.getCurrentUsername());
+        } catch (Exception ex) {
+            log.warn(ex.getMessage());
+        }
         return Optional.of("system");
     }
 

@@ -29,9 +29,11 @@
     </properties>
 
     <modules>
-        <module>lib-common</module>
         <module>app/api-gateway</module>
         <module>app/core</module>
+        <module>app/discovery</module>
+        <module>lib/lib-common</module>
+        <module>lib/http</module>
     </modules>
 
     <dependencyManagement>

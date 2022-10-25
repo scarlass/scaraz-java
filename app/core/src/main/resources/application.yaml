@@ -4,15 +4,12 @@ server:
 spring:
   application:
     name: core-svc
-
   main:
     allow-bean-definition-overriding: true
     log-startup-info: false
-
   jackson:
     default-property-inclusion: NON_NULL
     date-format: com.fasterxml.jackson.databind.util.StdFormat
-
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://${DATABASE_HOSTNAME:127.0.0.1}:${DATABASE_PORT:10432}/${CORE_DATABASE:sc-core}
@@ -35,15 +32,34 @@ spring:
     out-of-order: true
     connect-retries: 3
     connect-retries-interval: 10
-  cloud:
-    discovery:
-      enabled: false
+#  cloud:
+#    discovery:
+#      enabled: false
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}
           jwk-set-uri: ${AUTH_ISSUER:https://auth.scaraz.dev}/realms/${AUTH_SCOPE}/protocol/openid-connect/certs
+
+
+eureka:
+  client:
+    enabled: true
+    fetch-registry: true
+    register-with-eureka: true
+    registry-fetch-interval-seconds: 12
+    service-url:
+      defaultZone: ${DISCOVERY_SERVICE_URL:http://localhost:8761/eureka}
+
+  instance:
+    appname: ${spring.application.name}
+    app-group-name: scaraz
+    instance-id: ${spring.application.name}:${instanceId:${random.value}}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 2
+
 
 keycloak:
   auth-server-url: ${AUTH_ISSUER:https://auth.scaraz.dev}

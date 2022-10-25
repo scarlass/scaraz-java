@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.web.reactive.config.EnableWebFlux;
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @EnableWebFlux
+@EnableDiscoveryClient
 @SpringBootApplication
 @RequiredArgsConstructor
 @EnableConfigurationProperties({AppProperties.class, ApiGatewayProperties.class})

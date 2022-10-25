@@ -1,6 +1,8 @@
 package dev.scaraz.gateway.configuration;
 
+import dev.scaraz.common.exceptions.ScException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.zalando.problem.spring.webflux.advice.ProblemHandling;
 import org.zalando.problem.spring.webflux.advice.security.SecurityAdviceTrait;
@@ -8,14 +10,18 @@ import org.zalando.problem.spring.webflux.advice.security.SecurityAdviceTrait;
 import java.net.URI;
 
 @Slf4j
+@ComponentScan
 @ControllerAdvice
 public class ExceptionHandling implements ProblemHandling, SecurityAdviceTrait {
 
-    private static final URI DEFAULT_URI = URI.create("https://scaraz.dev/error-reference");
-
     @Override
     public URI defaultConstraintViolationType() {
-        return DEFAULT_URI;
+        return ScException.DEFAULT_TYPE;
+    }
+
+    @Override
+    public boolean isCausalChainsEnabled() {
+        return false;
     }
 
 }

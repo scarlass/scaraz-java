@@ -2,8 +2,8 @@ package dev.scaraz.core.mapper;
 
 import dev.scaraz.common.dto.response.api.ApiEntryDTO;
 import dev.scaraz.common.dto.response.api.ApiHostDTO;
-import dev.scaraz.core.datasource.domains.ApiEntry;
-import dev.scaraz.core.datasource.domains.ApiHost;
+import dev.scaraz.core.datasource.domains.api.ApiEntry;
+import dev.scaraz.core.datasource.domains.api.ApiHost;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
